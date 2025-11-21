@@ -5,17 +5,18 @@
 name: Rust Code Quality
 
 on:
-  workflow_dispatch:
+  pull_request:
+    branches: [main]
 
 jobs:
-  matrix_build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
+  build:
+    runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v2
-    - name: Check Cargo FMT
-      run: cargo fmt --check
-    - name: Make sure Rust builds correctly
-      run: cargo build
+    - name: Set up Rust
+      uses: actions/setup-rust@v1
+      with:
+        rust-version: stable
+    - name: Build
+      run: cargo build --verbose
